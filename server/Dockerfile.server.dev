@@ -1,0 +1,39 @@
+# These instructions are for testing a server image (using FastAPI) by itself.
+# -----------------------------------------------------------------------------
+# Build this Dockerfile into an image: `docker build -t fastapi-image -f Dockerfile.fastapi.dev .`
+# Run a Docker container from this image:
+  # `docker run --name fastapi-container --rm -p 8000:8000 fastapi-image`
+# Access the app at `http://localhost:8000/api/get-todos` to see a JSON response.
+# Stop this Docker container: `docker stop fastapi-container`
+
+# This base image is used for data science applications. If you are not creating a data science application, then you can use something like the "python:3.10-buster" image instead.
+# FROM continuumio/anaconda3:2021.05
+# FROM python:3.10-buster
+FROM python:3.11
+
+# Update the package lists for upgrades for packages that need upgrading, as well as new packages that have just come to the repositories
+RUN apt-get update && \
+    # Install the python3-dev package
+    apt-get install -y python3-dev && \
+    # Fix broken dependencies
+    apt-get install -f -y
+
+# Create the following directory in the container and make it the container's current working directory.
+WORKDIR /app/server
+ENV PYTHONPATH=/app/server
+
+# Copy the files from this project's server directory into the container's current working directory.
+# COPY ./server .
+# COPY ./server /app/server
+COPY ./server /app/server
+
+
+# Install Python dependencies.
+# What is pip's `--no-cache-dir` good for?: https://stackoverflow.com/questions/45594707/what-is-pips-no-cache-dir-good-for
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Make the server available to the host machine on port 8000.
+EXPOSE 8000
+
+# Run a script that will run the default app for this container.
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

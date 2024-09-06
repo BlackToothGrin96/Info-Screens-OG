@@ -1,0 +1,74 @@
+# This Dockerfile will create a production version of the SvelteKit app (i.e. frontend code).
+# The final version will be a web server (using Express.js) and a collection of static files
+# inside the container's `/app/build` directory.
+
+# These Dockerfile instructions were borrowed from this post:
+# https://blog.alexanderwolf.tech/how-to-dockerize-your-sveltekit-app/
+
+# Multi-stage builds: https://dev.to/ganeshmani/crafting-multi-stage-builds-with-docker-in-node-js-hki.
+
+
+# These instructions are for testing a client image (using Svelte) by itself.
+# -------------------------------------------------------------------------
+# Build this Dockerfile into an image: `docker build -t svelte-image -f Dockerfile.client .`
+# Run a Docker container from this image: 
+  # `docker run --name svelte-container --rm -p 3000:3000 svelte-image`
+  # If you have problems accessing the page in a browser, then look at this post for a possible solution: https://stackoverflow.com/questions/49497211/docker-container-running-vue-cli-welcome-page-on-localhost-this-site-can-t-be-r
+  # `docker run --name svelte-container --rm -p 3000:3000 -e "HOST=0.0.0.0" -d svelte-image`
+# Stop this Docker container: `docker stop svelte-container`
+# Access your app at `http://localhost:3000/`. You should see the homepage.
+
+#####
+# Build Stage 1:
+# This build will create an intermediate image for the production code.
+#####
+
+FROM node:18.20 AS base
+
+# Set the working directory.
+WORKDIR /app
+
+# Copy the `client` directory over to the `/app` directory of the intermediate image.
+COPY ./client .
+
+# Install dependencies. This will install the dependencies inside the Docker container and create a
+# node_modules folder inside the Docker container rather than copying a node_modules folder from the
+# local project or rather than creating a node_modules folder inside the local project.
+RUN npm install
+
+RUN npm run build
+
+RUN ls /app/express-web-server.js || echo "File not found!"
+
+#####
+# Build Stage 2:
+# This build will create the production image that is based on the `base` image.
+#####
+
+# Same as above.
+FROM node:18.20 AS build
+
+# Same as above.
+WORKDIR /app
+
+# The static files have been compiled, so they do not need the node_modules folder in order to work.
+# However, the Express.js server does need packages from the node_modules folder in order to work.
+# This will install Express.js and it dependencies.
+RUN npm install express http-proxy-middleware
+
+# Copy only the client-side build artifacts (i.e. the static files) from the `base` 
+# image into the new stage's `/app/build` directory.
+COPY --from=base /app/build ./build
+
+# Express.js will act as the web server to server up the static files for this container and redirect any requests that begin with `/api` to the backend container.
+# Copy the express-web-server.js file from the `base` image over to the new stage's `/app` directory.
+COPY --from=base /app/express-web-server.js .
+
+# Make the Express.js server available to the host machine on port 80.
+# Uncomment port 80 for live deployment.
+EXPOSE 80
+# Uncomment port 3000 to test local production build.
+# EXPOSE 3000
+
+# # Run the default app for this container.
+CMD ["node", "express-web-server.js"]

@@ -1,0 +1,42 @@
+# The configs in this file will overwrite the configs that are defined in a corresponding Dockerfile.
+# So some of these configs might not be necessary if they are already defined in a correspoding Dockerfile.
+# In fact, some of the configs in this file might throw errors, but they won't throw errors in the Dockerfile.
+# See the `docker-compose.dev.yml` file for an example of this.
+
+version: "3.7"
+
+services:
+  prod-server:
+    build:
+      context: .
+      dockerfile: ./server/Dockerfile.server
+    volumes:
+      - ./server:/app/server
+    restart: always
+    # Documentation about `ports` config: https://docs.docker.com/compose/compose-file/compose-file-v3/#ports
+    ports:
+      - target: 8000
+        published: 8000
+
+  prod-client:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile.client
+    volumes:
+      - ./client:/app/client
+    working_dir: /app/client
+#    environment:
+#      - VITE_API_URL=http://prod-server:8000
+    # You have to run `npm install` to install the dependencies and `npm run build` to create a production version of the client-side code.
+    # You have to use bash to execute the command otherwise you will get errors.
+    command: bash -c "npm install && npm run build && node express-web-server.js"
+    ports:
+      # Uncomment port 80 for live deployment.
+      - "80:80"
+      # Uncomment port 3000 to test local production build.
+      # - "3000:3000"
+      # Configuring the ports "24678:24678" will prevent the browser from constantly reloading.
+      # See https://github.com/sveltejs/kit/issues/1468 and https://github.com/sveltejs/kit/issues/1134.
+      - "24678:24678"    
+    depends_on:
+      - prod-server

@@ -1,0 +1,36 @@
+# These instructions are for testing a client image (using Svelte) by itself.
+# -------------------------------------------------------------------------
+# Build this Dockerfile into an image: `docker build -t svelte-image -f Dockerfile.client.dev .`
+# Run a Docker container from this image: 
+  # `docker run --name svelte-container --rm -p 3000:3000 svelte-image`
+  # If you have problems accessing the page in a browser, then look at this post for a possible solution: https://stackoverflow.com/questions/49497211/docker-container-running-vue-cli-welcome-page-on-localhost-this-site-can-t-be-r
+  # `docker run --name svelte-container --rm -p 3000:3000 -e "HOST=0.0.0.0" -d svelte-image`
+# Stop this Docker container: `docker stop svelte-container`
+# Access your app at `http://localhost:3000/`
+
+# Pin the minor version of Node to prevent breaking changes from updated Node versions.
+# See:
+  # https://nickjanetakis.com/blog/docker-tip-18-please-pin-your-docker-image-versions
+  # https://www.debian.org/releases/
+FROM node:18.20
+
+# Create the following directory in the container and make it the container's current working directory.
+WORKDIR /app/client
+
+# Optionally copy package.json and package-lock.json files, if they exist.
+COPY ./client/package*.json /app/client/
+
+# Install dependencies. This will install the dependencies inside the Docker container and create a
+# node_modules folder inside the Docker container rather than copying a node_modules folder from the
+# local project or rather than creating a node_modules folder inside the local project.
+RUN npm install
+
+# Copy the files from this project's client directory into the container's current working directory.
+COPY ./client /app/client
+
+# Make the dev server available to the host machine on port 3000.
+# EXPOSE 80
+EXPOSE 3000
+
+# Execute the app in this container.
+CMD npm run dev --host

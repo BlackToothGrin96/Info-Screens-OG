@@ -1,0 +1,2 @@
+# Ignore binary files that get built at runtime.
+**/__pycache__
