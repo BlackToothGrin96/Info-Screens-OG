@@ -1,32 +1,5 @@
 <script>
 	import logo from '$lib/images/logo@2x.png';
-	import { onMount } from 'svelte';
-
-	let time = new Date();
-
-	// these automatically update when `time`
-	// changes, because of the `$:` prefix
-	$: hours = time.getHours();
-	$: minutes = time.getMinutes();
-	$: seconds = time.getSeconds();
-	// $: timeNow = time.toDateString();
-	// $: day = time.getDay();
-	$: date = time.toDateString();
-
-    // Function to pad single digit numbers with a leading zero
-    function padToTwoDigits(number) {
-      return number.toString().padStart(2, '0');
-    }
-
-	onMount(() => {
-		const interval = setInterval(() => {
-			time = new Date();
-		}, 1000);
-
-		return () => {
-			clearInterval(interval);
-		};
-	});
 </script>
 
 <div class="rb-corner">
@@ -45,10 +18,10 @@
 <style>
     .rb-corner {
         position: fixed;
-        top: 0;
+        bottom: 0;
         left: 0;
         background: var(--rb-primary);
-        border-bottom-right-radius: 25px;
+        border-top-right-radius: 25px;
         width: 24%;
         height: 15%;
         display: flex;
@@ -96,11 +69,11 @@
     /*    height: 30%;*/
     /*}*/
 
-	.time-text {
-		color: white;
-		font-weight: bold;
-		font-size: 2rem;
-		text-align: center;
-		margin: 0;
-	}
+	/*.time-text {*/
+	/*	color: white;*/
+	/*	font-weight: bold;*/
+	/*	font-size: 2rem;*/
+	/*	text-align: center;*/
+	/*	margin: 0;*/
+	/*}*/
 </style>

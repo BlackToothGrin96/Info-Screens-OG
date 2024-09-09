@@ -1,31 +1,42 @@
 <script>
 	import logo from '$lib/images/logo@2x.png';
-	import { onMount } from 'svelte';
+	import { onDestroy } from 'svelte';
 
-	let time = new Date();
-
-	// these automatically update when `time`
-	// changes, because of the `$:` prefix
-	$: hours = time.getHours();
-	$: minutes = time.getMinutes();
-	$: seconds = time.getSeconds();
-	// $: timeNow = time.toDateString();
-	// $: day = time.getDay();
-	$: date = time.toDateString();
-
-    // Function to pad single digit numbers with a leading zero
-    function padToTwoDigits(number) {
-      return number.toString().padStart(2, '0');
-    }
-
-	onMount(() => {
-		const interval = setInterval(() => {
-			time = new Date();
-		}, 1000);
-
-		return () => {
-			clearInterval(interval);
+	// Helper function to get the current local time and date
+	function getCurrentLocalTime() {
+		const now = new Date();
+        // now.setTime( now.getTime() - now.getTimezoneOffset()*60*1000 );
+		const options = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+		const timeString = new Intl.DateTimeFormat(undefined, options).format(now);
+		const [hour, minute, second] = timeString.match(/\d{2}/g);
+		return {
+			hours: parseInt(hour),
+			minutes: parseInt(minute),
+			seconds: parseInt(second),
+			date: now.toDateString(),
 		};
+	}
+
+	// Initialize the time values with the correct local time
+	let { hours, minutes, seconds, date } = getCurrentLocalTime();
+
+	// Function to pad single digit numbers with a leading zero
+	function padToTwoDigits(number) {
+		return number.toString().padStart(2, '0');
+	}
+
+	// Start updating time immediately after the component mounts
+	const interval = setInterval(() => {
+		const { hours: newHours, minutes: newMinutes, seconds: newSeconds, date: newDate } = getCurrentLocalTime();
+		hours = newHours;
+		minutes = newMinutes;
+		seconds = newSeconds;
+		date = newDate;
+	}, 500); // update every second
+
+	// Cleanup when component is destroyed
+	onDestroy(() => {
+		clearInterval(interval);
 	});
 </script>
 
@@ -33,6 +44,14 @@
     <div class="logo">
         <p class="time-text">{padToTwoDigits(hours)}:{padToTwoDigits(minutes)}:{padToTwoDigits(seconds)}</p>
         <p class="time-text">{date}</p>
+<!--        {#if mounted}-->
+<!--            &lt;!&ndash; Display the time and date after hydration &ndash;&gt;-->
+<!--            <p class="time-text">{padToTwoDigits(hours)}:{padToTwoDigits(minutes)}:{padToTwoDigits(seconds)}</p>-->
+<!--            <p class="time-text">{date}</p>-->
+<!--        {:else}-->
+<!--            &lt;!&ndash; Placeholder before the component is fully mounted &ndash;&gt;-->
+<!--            <p></p>-->
+<!--        {/if}-->
     </div>
 </div>
 
@@ -40,10 +59,10 @@
 <style>
     .rb-corner {
         position: fixed;
-        top: 0;
+        bottom: 0;
         right: 0;
         background: var(--rb-primary);
-        border-bottom-left-radius: 25px;
+        border-top-left-radius: 25px;
         width: 24%;
         height: 15%;
         display: flex;
@@ -86,7 +105,9 @@
 		text-align: center;
 		margin: 0;
         display: block;
-        height: auto;
-        width: 90%;
+        height: 50%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
 	}
 </style>

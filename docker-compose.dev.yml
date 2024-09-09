@@ -11,6 +11,12 @@ services:
     build:
       context: ./
       dockerfile: ./server/Dockerfile.server.dev
+    volumes:
+      # Mount the host's timezone and localtime files read-only
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=Europe/London
 #    volumes:
 #      - ./server:/app/server
 #    working_dir: /app/server
@@ -25,6 +31,12 @@ services:
     build:
       context: ./
       dockerfile: ./client/Dockerfile.client.dev
+    volumes:
+      # Mount the host's timezone and localtime files read-only
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TZ=Europe/London
 #    volumes:
 #      - ./:/app/client
 #    working_dir: /app/client

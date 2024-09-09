@@ -10,7 +10,7 @@ export const csr = dev;
 
 // since there's no dynamic data here, we can prerender
 // it so that it gets served as a static asset in production
-export const prerender = false;
+export const prerender = true;
 
 export const load: PageServerLoad = async ({ params }) => {
     const channelInfo = await fetch(
@@ -18,15 +18,15 @@ export const load: PageServerLoad = async ({ params }) => {
 
     const res = await channelInfo.json();
 
-    let total = 0;
-
-    res.statuses.forEach((item: any) => {
-        total += item.count;
-    });
+    // let total = 0;
+    //
+    // res.statuses.forEach((item: any) => {
+    //     total += item.count;
+    // });
 
     const result = {
         "info": res,
-        "total": total,
+        // "total": total,
         "channel_code": params.channel_code,
     }
 
