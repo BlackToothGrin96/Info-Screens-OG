@@ -29,7 +29,7 @@
 
 	<div class="cell2">
 			<div class="title-box">
-				<p class="channel-name">{data.info.channel_name}</p>
+				<p class="channel-name">Today's {data.info.channel_name}</p>
 				<!--{#each data.info.statuses as info, index}-->
 				<!--	<h2 class="status-item">{info.status} - {info.count}</h2>-->
 				<!--{/each}-->
@@ -45,42 +45,94 @@
 <!--	</div>-->
 
 	<div class="cell4 rb-info-box columns is-multiline">
-<!--		<div class="cell-spacer">-->
-			{#each data.info.statuses.slice(0, 4) as info, index}
-				<div class="status-spacer column is-full">
-<!--					<div class="triangle-left"></div>-->
-					<div class="status-box columns">
-						<div class="column is-two-thirds status-item">
-							{info.status}
-						</div>
-						<div class="column is-one-third status-item">
-							{info.count}
-						</div>
+		<!--{#each data.info.statuses.slice(0, 4) as info, index}-->
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-two-thirds status-item">
+						{data.info.statuses[0].status}
 					</div>
-<!--					<div class="triangle-right"></div>-->
+					<div class="column is-one-third status-item">
+						{data.info.statuses[0].count}
+					</div>
 				</div>
-			{/each}
-<!--		</div>-->
+			</div>
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-two-thirds status-item">
+						{data.info.statuses[3].status}
+					</div>
+					<div class="column is-one-third status-item">
+						{data.info.statuses[3].count}
+					</div>
+				</div>
+			</div>
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-two-thirds status-item">
+						{data.info.statuses[2].status}
+					</div>
+					<div class="column is-one-third status-item">
+						{data.info.statuses[2].count}
+					</div>
+				</div>
+			</div>
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-two-thirds status-item">
+						{data.info.statuses[5].status}
+					</div>
+					<div class="column is-one-third status-item">
+						{data.info.statuses[5].count}
+					</div>
+				</div>
+			</div>
+		<!--{/each}-->
 	</div>
 
 	<div class="cell5 rb-info-box columns is-multiline">
-<!--		<div class="cell-spacer">-->
-			{#each data.info.statuses.slice(4) as info, index}
-				<div class="status-spacer column is-full">
-<!--					<div class="triangle-left"></div>-->
-					<div class="status-box columns">
-						<div class="column is-two-thirds status-item">
-							{info.status}
-						</div>
-						<div class="column is-one-third status-item">
-							{info.count}
-						</div>
+		<!--{#each data.info.statuses.slice(4) as info, index}-->
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-two-thirds status-item">
+						{data.info.statuses[1].status}
 					</div>
-<!--					<div class="triangle-right"></div>-->
+					<div class="column is-one-third status-item">
+						{data.info.statuses[1].count}
+					</div>
 				</div>
-			{/each}
-		</div>
-<!--	</div>-->
+			</div>
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-two-thirds status-item">
+						{data.info.statuses[4].status}
+					</div>
+					<div class="column is-one-third status-item">
+						{data.info.statuses[4].count}
+					</div>
+				</div>
+			</div>
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-two-thirds status-item">
+						{data.info.statuses[6].status}
+					</div>
+					<div class="column is-one-third status-item">
+						{data.info.statuses[6].count}
+					</div>
+				</div>
+			</div>
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-two-thirds status-item">
+						{data.info.statuses[7].status}
+					</div>
+					<div class="column is-one-third status-item">
+						{data.info.statuses[7].count}
+					</div>
+				</div>
+			</div>
+		<!--{/each}-->
+	</div>
 </div>
 
 
@@ -106,13 +158,13 @@
 		grid-area: 1 / 1 / 2 / 3;
 		height: 100%;
 		margin: 0;
-		padding: 0;
+		padding: 2rem 0 0 2rem;
 	}
 	.cell5 {
 		grid-area: 1 / 3 / 2 / 5;
 		height: 100%;
 		margin: 0;
-		padding: 0;
+		padding: 2rem 2rem 0 0;
 	}
 
 	/*.side-box {*/
@@ -146,7 +198,7 @@
 	.channel-name {
 		color: white;
 		font-weight: bold;
-		font-size: 12rem;
+		font-size: 10rem;
 		text-align: center;
 		padding: 0;
 		margin: 0;
@@ -158,7 +210,7 @@
 		background: black;
 		width: 100%;
 		height: 25%;
-		padding: 0.75rem 1rem;
+		padding: 2rem;
 		margin: 0;
 	}
 	.status-box {
@@ -172,15 +224,15 @@
 		width: 100%;
 		height: 100%;
         /*height: 19%;*/
-		/*border-radius: 25px;*/
+		border-radius: 25px;
 		/*width: 200px;*/
-		aspect-ratio: 1.732 / 1; /* Correct hexagon ratio */
-		clip-path: polygon(
-			15% 0%, 85% 0%, /* Top points */
-			100% 50%, /* Right point */
-			85% 100%, 15% 100%, /* Bottom points */
-			0% 50% /* Left point */
-		);
+		/*aspect-ratio: 1.732 / 1; !* Correct hexagon ratio *!*/
+		/*clip-path: polygon(*/
+		/*	15% 0%, 85% 0%, !* Top points *!*/
+		/*	100% 50%, !* Right point *!*/
+		/*	85% 100%, 15% 100%, !* Bottom points *!*/
+		/*	0% 50% !* Left point *!*/
+		/*);*/
 	}
 	.status-item {
 		color: black;

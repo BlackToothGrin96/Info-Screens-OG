@@ -6,7 +6,7 @@ from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from typing import List
 
-from crud.channel_info import channel_info
+from crud.channel_info import channel_info, todays_channel_info, oldest_active_datetime, active_couriers
 from crud.warehouse_info import warehouse_info
 from utils.timing import timing_decorator
 from utils.logging_config import setup_logging
@@ -81,11 +81,11 @@ async def fetch_warehouse_info(
     return info
 
 
-@app.get("/info/channel/{channel_code}",
+@app.get("/info/today/{channel_code}",
          response_model=schemas.ChannelStatusResponse
          )
 @timing_decorator
-async def fetch_channel_info(
+async def fetch_todays_channel_info(
         channel_code: str,
         db: Session = Depends(get_serializable_db),
 ):
@@ -101,11 +101,94 @@ async def fetch_channel_info(
     Returns:
         dict: A success message, or a 500 error if an error occurs.
     """
-    logger.info(f"Fetch Channel Info: {channel_code}")
+    logger.info(f"Fetch Today's Channel Info: {channel_code}")
+
+    info = todays_channel_info(db, channel_code)
+
+    logger.info(f"Fetch Today's Channel Info RESULT: {info}")
+
+    return info
+
+
+@app.get("/info/all_time/{channel_code}",
+         response_model=schemas.ChannelStatusResponse
+         )
+@timing_decorator
+async def fetch_all_time_channel_info(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch All Time Channel Info: {channel_code}")
 
     info = channel_info(db, channel_code)
 
-    logger.info(f"Fetch Channel Info RESULT: {info}")
+    logger.info(f"Fetch All Time Channel Info RESULT: {info}")
+
+    return info
+
+
+@app.get("/info/oldest_active_datetime/{channel_code}")
+@timing_decorator
+async def fetch_oldest_datetime(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch Oldest Datetime for: {channel_code}")
+
+    info = oldest_active_datetime(db, channel_code)
+
+    logger.info(f"Fetch Oldest Datetime RESULT: {info}")
+
+    return info
+
+
+@app.get("/info/active_couriers/{channel_code}")
+@timing_decorator
+async def fetch_active_couriers(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch Active Couriers for: {channel_code}")
+
+    info = active_couriers(db, channel_code)
+
+    logger.info(f"Fetch Active Couriers RESULT: {info}")
 
     return info
 

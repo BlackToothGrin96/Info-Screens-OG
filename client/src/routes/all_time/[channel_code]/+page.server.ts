@@ -14,9 +14,15 @@ export const prerender = true;
 
 export const load: PageServerLoad = async ({ params }) => {
     const channelInfo = await fetch(
-        'http://192.168.1.30:8000/info/channel/' + params.channel_code);
+        'http://192.168.1.30:8000/info/all_time/' + params.channel_code);
+    const oldestOrder = await fetch(
+        'http://192.168.1.30:8000/info/oldest_active_datetime/' + params.channel_code);
+    const carriers = await fetch(
+        'http://192.168.1.30:8000/info/active_couriers/' + params.channel_code);
 
     const res = await channelInfo.json();
+    const oldest = await oldestOrder.json();
+    const couriers = await carriers.json();
 
     // let total = 0;
     //
@@ -26,7 +32,8 @@ export const load: PageServerLoad = async ({ params }) => {
 
     const result = {
         "info": res,
-        // "total": total,
+        "oldest": oldest,
+        "couriers": couriers,
         "channel_code": params.channel_code,
     }
 

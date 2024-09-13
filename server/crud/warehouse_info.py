@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 from typing import List
 from fastapi import HTTPException
+from sqlalchemy import case, or_
 from sqlalchemy.sql import func
 from sqlalchemy.orm import Session
 
@@ -20,21 +21,24 @@ def warehouse_info(db: Session):
             db.query(
                 func.coalesce(APIChannelConfig.app_channel_name, BasketOrder.channel_code).label('channel_code'),
                 func.count(func.distinct(BasketOrder.basket_id)).label('total_orders'),
-                func.count(func.distinct(func.case([(BasketOrder.status == 'OPEN', BasketOrder.basket_id, None)]))).label('open_count'),
-                func.count(func.distinct(func.case([(BasketOrder.status.in_(['ASSIGNED', 'PRINTING', 'PRINTED']), BasketOrder.basket_id, None)]))).label('processing_count'),
-                func.count(func.distinct(func.case([(BasketOrder.status == 'PICKED', BasketOrder.basket_id, None)]))).label('picked_count'),
-                func.count(func.distinct(func.case([(BasketOrder.status == 'PACKED', BasketOrder.basket_id, None)]))).label('packed_count'),
-                func.count(func.distinct(func.case([(BasketOrder.status.in_(['CANCELLED', 'REMOVED']), BasketOrder.basket_id, None)]))).label('cancelled_count'),
-                func.count(func.distinct(func.case([(BasketOrder.status == 'OOS', BasketOrder.basket_id, None)]))).label('oos_count'),
-                func.count(func.distinct(func.case([(BasketOrder.status == 'RECALL', BasketOrder.basket_id, None)]))).label('recall_count'),
-                func.count(func.distinct(func.case([(BasketOrder.status == 'RECALLED', BasketOrder.basket_id, None)]))).label('recalled_count')
+                func.count(func.distinct(case((BasketOrder.status == 'OPEN', BasketOrder.basket_id), else_=None))).label('open_count'),
+                func.count(func.distinct(case((BasketOrder.status.in_(['ASSIGNED', 'PRINTING', 'PRINTED']), BasketOrder.basket_id), else_=None))).label('processing_count'),
+                func.count(func.distinct(case((BasketOrder.status == 'PICKED', BasketOrder.basket_id), else_=None))).label('picked_count'),
+                func.count(func.distinct(case((BasketOrder.status == 'PACKED', BasketOrder.basket_id), else_=None))).label('packed_count'),
+                func.count(func.distinct(case((BasketOrder.status.in_(['CANCELLED', 'REMOVED']), BasketOrder.basket_id), else_=None))).label('cancelled_count'),
+                func.count(func.distinct(case((BasketOrder.status == 'OOS', BasketOrder.basket_id), else_=None))).label('oos_count'),
+                func.count(func.distinct(case((BasketOrder.status == 'RECALL', BasketOrder.basket_id), else_=None))).label('recall_count'),
+                func.count(func.distinct(case((BasketOrder.status == 'RECALLED', BasketOrder.basket_id), else_=None))).label('recalled_count')
             )
             .outerjoin(ChannelGroup, ChannelGroup.group_name == APIChannelConfig.channel_code)
             .outerjoin(ChannelGroupChannel, ChannelGroupChannel.channel_group_id == ChannelGroup.channel_group_id)
-            .outerjoin(BasketOrder, func.and_(
-                func.or_(BasketOrder.channel_code == ChannelGroupChannel.channel_code, BasketOrder.channel_code == APIChannelConfig.channel_code),
-                BasketOrder.create_date.between('2024-08-02', '2024-08-04')
-            ))
+            .outerjoin(BasketOrder,
+                (BasketOrder.channel_code == ChannelGroupChannel.channel_code) |
+               (BasketOrder.channel_code == APIChannelConfig.channel_code)
+            )
+            .filter(
+                (BasketOrder.create_date >= func.current_date())  # Ensure only today's orders are considered
+            )
             .group_by(func.coalesce(APIChannelConfig.app_channel_name, BasketOrder.channel_code))
             .order_by(func.coalesce(APIChannelConfig.app_channel_name, BasketOrder.channel_code))
         )

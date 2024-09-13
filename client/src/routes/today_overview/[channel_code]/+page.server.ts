@@ -14,7 +14,7 @@ export const prerender = true;
 
 export const load: PageServerLoad = async ({ params }) => {
     const channelInfo = await fetch(
-        'http://192.168.1.30:8000/info/warehouse');
+        'http://192.168.1.30:8000/info/today/' + params.channel_code);
 
     const res = await channelInfo.json();
 

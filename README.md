@@ -43,3 +43,22 @@ NOTES:
 
 # Proxying requests from the frontend to the backend
 The `/client/svelte.config.js` file is where the configurations are located for proxying frontend requests to the backend server. The `main.py` file also includes CORS configurations to allow requests from the frontend during development because the frontend code will run on a different port during development.
+
+
+"SELECT "
+"COUNT(DISTINCT basket_id) as count"
+"FROM api_channel_configs "
+"LEFT JOIN "
+"channel_group ON channel_group.group_name = api_channel_configs.channel_code "
+"LEFT JOIN "
+"channel_group_channel ON channel_group_channel.channel_group_id = channel_group.channel_group_id "
+"LEFT JOIN "
+"basket_order ON (basket_order.channel_code = channel_group_channel.channel_code "
+"OR basket_order.channel_code = api_channel_configs.channel_code) "
+"WHERE "
+"basket_order.status = 'OPEN' "
+"AND DATE(basket_order.create_date) != DATE(NOW())"
+"AND ( "
+"api_channel_configs.channel_code =  :channel_code"
+"OR channel_group_channel.channel_code = :channel_code" "
+"OR basket_order.channel_code = :channel_code")"
