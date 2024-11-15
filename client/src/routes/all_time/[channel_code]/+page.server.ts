@@ -13,16 +13,27 @@ export const csr = dev;
 export const prerender = true;
 
 export const load: PageServerLoad = async ({ params }) => {
-    const channelInfo = await fetch(
-        'http://192.168.1.30:8000/info/all_time/' + params.channel_code);
+    const channel_name = await fetch(
+        'http://192.168.1.30:8000/info/name/' + params.channel_code);
+    const openOrders = await fetch(
+        'http://192.168.1.30:8000/info/open/' + params.channel_code);
+    const otherNumbers = await fetch(
+        'http://192.168.1.30:8000/info/others/' + params.channel_code);
     const oldestOrder = await fetch(
-        'http://192.168.1.30:8000/info/oldest_active_datetime/' + params.channel_code);
+        'http://192.168.1.30:8000/info/oldest/' + params.channel_code);
     const carriers = await fetch(
         'http://192.168.1.30:8000/info/active_couriers/' + params.channel_code);
 
-    const res = await channelInfo.json();
+    const open = await openOrders.json();
+    const other = await otherNumbers.json();
     const oldest = await oldestOrder.json();
     const couriers = await carriers.json();
+
+    if (open === 0) {
+        couriers.sort((a: any, b: any) => {
+            return b.total_count - a.total_count;
+        });
+    }
 
     // let total = 0;
     //
@@ -31,7 +42,9 @@ export const load: PageServerLoad = async ({ params }) => {
     // });
 
     const result = {
-        "info": res,
+        "channel_name": await channel_name.json(),
+        "open": open,
+        "other": other,
         "oldest": oldest,
         "couriers": couriers,
         "channel_code": params.channel_code,

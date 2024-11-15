@@ -43,15 +43,7 @@
 <div class="rb-corner">
     <div class="logo">
         <p class="time-text">{padToTwoDigits(hours)}:{padToTwoDigits(minutes)}:{padToTwoDigits(seconds)}</p>
-        <p class="time-text">{date}</p>
-<!--        {#if mounted}-->
-<!--            &lt;!&ndash; Display the time and date after hydration &ndash;&gt;-->
-<!--            <p class="time-text">{padToTwoDigits(hours)}:{padToTwoDigits(minutes)}:{padToTwoDigits(seconds)}</p>-->
-<!--            <p class="time-text">{date}</p>-->
-<!--        {:else}-->
-<!--            &lt;!&ndash; Placeholder before the component is fully mounted &ndash;&gt;-->
-<!--            <p></p>-->
-<!--        {/if}-->
+        <p class="date-text">{date}</p>
     </div>
 </div>
 
@@ -75,30 +67,22 @@
         width: 100%;
         align-items: center;
         justify-content: center;
-        /*margin-top: 20px;*/
-        /*margin-bottom: 20px;*/
-        /*padding-top: 1rem;*/
     }
 
-    /*.columns {*/
-    /*    !*display: flex;*!*/
-    /*    !*align-items: center;*!*/
-    /*    !*justify-content: center;*!*/
-    /*    width: 100%;*/
-    /*    height: 100%;*/
-    /*}*/
-
-    /*.column {*/
-    /*    display: flex;*/
-    /*    align-items: center;*/
-    /*    justify-content: center;*/
-    /*}*/
-
-    /*.time-container {*/
-    /*    height: 30%;*/
-    /*}*/
-
 	.time-text {
+		color: white;
+		font-weight: bold;
+		font-size: 10rem;
+		text-align: center;
+		margin: 0;
+        display: block;
+        height: 50%;
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+	}
+
+	.date-text {
 		color: white;
 		font-weight: bold;
 		font-size: 5rem;

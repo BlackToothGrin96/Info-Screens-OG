@@ -107,8 +107,8 @@
 		font-weight: bold;
 		font-size: 20rem;
 		text-align: center;
-		padding-left: 10%;
-		padding-right: 10%;
+		padding-left: 5%;
+		padding-right: 5%;
 		margin: 0;
 	}
 	.cell-spacer {

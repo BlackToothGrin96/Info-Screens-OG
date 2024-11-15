@@ -13,10 +13,8 @@ export const csr = dev;
 export const prerender = true;
 
 export const load: PageServerLoad = async ({ params }) => {
-    const channelInfo = await fetch(
-        'http://192.168.1.30:8000/info/warehouse');
-
-    const res = await channelInfo.json();
+    const channel_name = await fetch(
+        'http://192.168.1.30:8000/go/orders_by_courier_group');
 
     // let total = 0;
     //
@@ -25,9 +23,7 @@ export const load: PageServerLoad = async ({ params }) => {
     // });
 
     const result = {
-        "info": res,
-        // "total": total,
-        "channel_code": params.channel_code,
+        "orders_by_courier": await channel_name.json(),
     }
 
     console.log("result: ", result);

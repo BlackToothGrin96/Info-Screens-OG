@@ -1,18 +1,6 @@
 <script>
-  import { onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import Clock from "$/routes/Clock.svelte";
   import RBCorner from "$/routes/RBCorner.svelte";
   import TimeCorner from "$/routes/TimeCorner.svelte";
-
-  // onMount(() => {
-  //   const timer = setTimeout(() => {
-  //     goto('/KITANDKIN'); // Replace '/target-page' with the actual path you want to navigate to
-  //   }, 1000); // 500 = 5s
-  //
-  //   // Cleanup timeout if the component is destroyed before the timeout
-  //   return () => clearTimeout(timer);
-  // });
 
 	export let data;
 </script>
@@ -29,10 +17,13 @@
 
 	<div class="cell2">
 			<div class="title-box">
-				<p class="channel-name">Today's {data.info.channel_name}</p>
-				<!--{#each data.info.statuses as info, index}-->
-				<!--	<h2 class="status-item">{info.status} - {info.count}</h2>-->
-				<!--{/each}-->
+				{#if data.channel_name.length > 20}
+					<p class="channel-name" style="font-size: 8rem">{data.channel_name}</p>
+				{:else if data.channel_name.length > 16}
+					<p class="channel-name" style="font-size: 10rem">{data.channel_name}</p>
+				{:else}
+					<p class="channel-name" style="font-size: 12rem">{data.channel_name}</p>
+				{/if}
 			</div>
 	</div>
 
@@ -49,40 +40,40 @@
 			<div class="status-spacer column is-full">
 				<div class="status-box columns">
 					<div class="column is-two-thirds status-item">
-						{data.info.statuses[0].status}
+						New Today
 					</div>
 					<div class="column is-one-third status-item">
-						{data.info.statuses[0].count}
+						{data.new}
+					</div>
+				</div>
+			</div>
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-three-quarters oldest-title">
+						Oldest Open Order
+					</div>
+					<div class="column is-one-quarter oldest-item">
+						{data.oldest}
+					</div>
+				</div>
+			</div>
+			<div class="status-spacer column is-full">
+				<div class="status-box columns">
+					<div class="column is-three-quarters oldest-title">
+						Ready for Packing
+					</div>
+					<div class="column is-one-quarter status-item">
+						{data.other.statuses[1].count}
 					</div>
 				</div>
 			</div>
 			<div class="status-spacer column is-full">
 				<div class="status-box columns">
 					<div class="column is-two-thirds status-item">
-						{data.info.statuses[3].status}
+						Recalled
 					</div>
 					<div class="column is-one-third status-item">
-						{data.info.statuses[3].count}
-					</div>
-				</div>
-			</div>
-			<div class="status-spacer column is-full">
-				<div class="status-box columns">
-					<div class="column is-two-thirds status-item">
-						{data.info.statuses[2].status}
-					</div>
-					<div class="column is-one-third status-item">
-						{data.info.statuses[2].count}
-					</div>
-				</div>
-			</div>
-			<div class="status-spacer column is-full">
-				<div class="status-box columns">
-					<div class="column is-two-thirds status-item">
-						{data.info.statuses[5].status}
-					</div>
-					<div class="column is-one-third status-item">
-						{data.info.statuses[5].count}
+						{data.cancelled}
 					</div>
 				</div>
 			</div>
@@ -94,40 +85,40 @@
 			<div class="status-spacer column is-full">
 				<div class="status-box columns">
 					<div class="column is-two-thirds status-item">
-						{data.info.statuses[1].status}
+						Open
 					</div>
 					<div class="column is-one-third status-item">
-						{data.info.statuses[1].count}
+						{data.open}
 					</div>
 				</div>
 			</div>
 			<div class="status-spacer column is-full">
 				<div class="status-box columns">
 					<div class="column is-two-thirds status-item">
-						{data.info.statuses[4].status}
+						{data.other.statuses[0].status}
 					</div>
 					<div class="column is-one-third status-item">
-						{data.info.statuses[4].count}
+						{data.other.statuses[0].count}
 					</div>
 				</div>
 			</div>
 			<div class="status-spacer column is-full">
 				<div class="status-box columns">
 					<div class="column is-two-thirds status-item">
-						{data.info.statuses[6].status}
+						Priority
 					</div>
 					<div class="column is-one-third status-item">
-						{data.info.statuses[6].count}
+						{data.priority}
 					</div>
 				</div>
 			</div>
 			<div class="status-spacer column is-full">
 				<div class="status-box columns">
 					<div class="column is-two-thirds status-item">
-						{data.info.statuses[7].status}
+						Out of Stock
 					</div>
 					<div class="column is-one-third status-item">
-						{data.info.statuses[7].count}
+						{data.other.statuses[2].count}
 					</div>
 				</div>
 			</div>
@@ -158,19 +149,14 @@
 		grid-area: 1 / 1 / 2 / 3;
 		height: 100%;
 		margin: 0;
-		padding: 2rem 0 0 2rem;
+		padding: 1rem 0 0 1rem;
 	}
 	.cell5 {
 		grid-area: 1 / 3 / 2 / 5;
 		height: 100%;
 		margin: 0;
-		padding: 2rem 2rem 0 0;
+		padding: 1rem 1rem 0 0;
 	}
-
-	/*.side-box {*/
-	/*	align-items: center;*/
-	/*	justify-content: center;*/
-	/*}*/
 	.title-box {
 		background: var(--rb-byzantium);
 		align-items: center;
@@ -196,9 +182,10 @@
 	/*	height: 20vh;*/
 	/*}*/
 	.channel-name {
+		white-space: nowrap;
 		color: white;
 		font-weight: bold;
-		font-size: 10rem;
+		/*font-size: 12rem;*/
 		text-align: center;
 		padding: 0;
 		margin: 0;
@@ -210,7 +197,7 @@
 		background: black;
 		width: 100%;
 		height: 25%;
-		padding: 2rem;
+		padding: 1rem;
 		margin: 0;
 	}
 	.status-box {
@@ -225,46 +212,32 @@
 		height: 100%;
         /*height: 19%;*/
 		border-radius: 25px;
-		/*width: 200px;*/
-		/*aspect-ratio: 1.732 / 1; !* Correct hexagon ratio *!*/
-		/*clip-path: polygon(*/
-		/*	15% 0%, 85% 0%, !* Top points *!*/
-		/*	100% 50%, !* Right point *!*/
-		/*	85% 100%, 15% 100%, !* Bottom points *!*/
-		/*	0% 50% !* Left point *!*/
-		/*);*/
 	}
 	.status-item {
 		color: black;
 		font-weight: bold;
-		font-size: 10rem;
+		font-size: 9rem;
 		margin: 0;
 		padding: 0;
 		/*left: 0;*/
 		text-align: center;
 	}
-	/*.triangle-left {*/
-	/*	width: 0;*/
-	/*	height: 0;*/
-	/*	border-top: 25px solid transparent;*/
-	/*	border-right: 50px solid white;*/
-	/*	border-bottom: 25px solid transparent;*/
-	/*	!*background: white;*!*/
-	/*}*/
-	/*.triangle-right {*/
-	/*	width: 0;*/
-	/*	height: 0;*/
-	/*	border-top: 25px solid transparent;*/
-	/*	border-left: 50px solid white;*/
-	/*	border-bottom: 25px solid transparent;*/
-	/*	!*background: white;*!*/
-	/*}*/
-	/*.status-item-right {*/
-	/*	color: black;*/
-	/*	font-weight: bold;*/
-	/*	font-size: 10rem;*/
-	/*	margin: 0;*/
-	/*	right: 0;*/
-	/*	!*text-align: center;*!*/
-	/*}*/
+	.oldest-item {
+		color: black;
+		font-weight: bold;
+		font-size: 7rem;
+		margin: 0;
+		padding: 0;
+		/*left: 0;*/
+		text-align: center;
+	}
+	.oldest-title {
+		color: black;
+		font-weight: bold;
+		font-size: 7rem;
+		margin: 0;
+		padding: 0;
+		/*left: 0;*/
+		text-align: center;
+	}
 </style>

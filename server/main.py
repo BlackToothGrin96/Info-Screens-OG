@@ -6,8 +6,9 @@ from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from typing import List
 
-from crud.channel_info import channel_info, todays_channel_info, oldest_active_datetime, active_couriers
-from crud.warehouse_info import warehouse_info
+from crud.channel_info import *
+from crud.goods_out import *
+from crud.warehouse_info import *
 from utils.timing import timing_decorator
 from utils.logging_config import setup_logging
 from utils.db_session import get_db, get_serializable_db
@@ -53,39 +54,9 @@ async def submit_framework(selected_framework: str = Body(..., embed=True)):
 ########################################
 
 
-@app.get("/info/warehouse",
-         response_model=schemas.ChannelStatusResponse
-         )
+@app.get("/info/name/{channel_code}")
 @timing_decorator
-async def fetch_warehouse_info(
-        db: Session = Depends(get_serializable_db),
-):
-    """
-    Endpoint to refresh the configurations for all channels.
-
-    This endpoint refreshes the configurations for all channels.
-    If an error occurs while refreshing the configurations, a 500 error is returned.
-
-    Args:
-        user_id (int): The ID of the user making the request.
-
-    Returns:
-        dict: A success message, or a 500 error if an error occurs.
-    """
-    logger.info(f"Fetch General Warehouse Info")
-
-    info = warehouse_info(db)
-
-    logger.info(f"Fetch General Warehouse Info RESULT: {info}")
-
-    return info
-
-
-@app.get("/info/today/{channel_code}",
-         response_model=schemas.ChannelStatusResponse
-         )
-@timing_decorator
-async def fetch_todays_channel_info(
+async def fetch_channel_name(
         channel_code: str,
         db: Session = Depends(get_serializable_db),
 ):
@@ -101,20 +72,18 @@ async def fetch_todays_channel_info(
     Returns:
         dict: A success message, or a 500 error if an error occurs.
     """
-    logger.info(f"Fetch Today's Channel Info: {channel_code}")
+    logger.info(f"fetch_channel_name ARGS: channel_code - {channel_code}")
 
-    info = todays_channel_info(db, channel_code)
+    res = get_channel_name(db, channel_code)
 
-    logger.info(f"Fetch Today's Channel Info RESULT: {info}")
+    logger.info(f"fetch_channel_name RESULT: channel_code - {res}")
 
-    return info
+    return res
 
 
-@app.get("/info/all_time/{channel_code}",
-         response_model=schemas.ChannelStatusResponse
-         )
+@app.get("/info/open/{channel_code}")
 @timing_decorator
-async def fetch_all_time_channel_info(
+async def fetch_open_orders(
         channel_code: str,
         db: Session = Depends(get_serializable_db),
 ):
@@ -130,16 +99,124 @@ async def fetch_all_time_channel_info(
     Returns:
         dict: A success message, or a 500 error if an error occurs.
     """
-    logger.info(f"Fetch All Time Channel Info: {channel_code}")
+    logger.info(f"fetch_open_orders ARGS: channel_code - {channel_code}")
 
-    info = channel_info(db, channel_code)
+    res = get_open_orders(db, channel_code)
 
-    logger.info(f"Fetch All Time Channel Info RESULT: {info}")
+    logger.info(f"fetch_open_orders RESULT: channel_code - {res}")
 
-    return info
+    return res
 
 
-@app.get("/info/oldest_active_datetime/{channel_code}")
+@app.get("/info/new_today/{channel_code}")
+@timing_decorator
+async def fetch_new_today(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"fetch_new_today ARGS: channel_code - {channel_code}")
+
+    res = get_new_today(db, channel_code)
+
+    logger.info(f"fetch_new_today RESULT: channel_code - {res}")
+
+    return res
+
+
+@app.get("/info/cancelled/{channel_code}")
+@timing_decorator
+async def fetch_cancelled_orders(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"fetch_cancelled_orders ARGS: channel_code - {channel_code}")
+
+    res = get_cancelled_orders(db, channel_code)
+
+    logger.info(f"fetch_cancelled_orders RESULT: channel_code - {res}")
+
+    return res
+
+
+@app.get("/info/priority/{channel_code}")
+@timing_decorator
+async def fetch_priority_orders(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"fetch_priority_orders ARGS: channel_code - {channel_code}")
+
+    res = get_priority_orders(db, channel_code)
+
+    logger.info(f"fetch_priority_orders RESULT: channel_code - {res}")
+
+    return res
+
+
+@app.get("/info/others/{channel_code}")
+@timing_decorator
+async def fetch_other_orders(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"fetch_other_orders ARGS: channel_code - {channel_code}")
+
+    res = get_other_orders(db, channel_code)
+
+    logger.info(f"fetch_other_orders RESULT: channel_code - {res}")
+
+    return res
+
+
+@app.get("/info/oldest/{channel_code}")
 @timing_decorator
 async def fetch_oldest_datetime(
         channel_code: str,
@@ -164,6 +241,35 @@ async def fetch_oldest_datetime(
     logger.info(f"Fetch Oldest Datetime RESULT: {info}")
 
     return info
+
+
+# @app.get("/info/all_time/{channel_code}",
+#          response_model=schemas.ChannelStatusResponse
+#          )
+# @timing_decorator
+# async def fetch_all_time_channel_info(
+#         channel_code: str,
+#         db: Session = Depends(get_serializable_db),
+# ):
+#     """
+#     Endpoint to refresh the configurations for all channels.
+#
+#     This endpoint refreshes the configurations for all channels.
+#     If an error occurs while refreshing the configurations, a 500 error is returned.
+#
+#     Args:
+#         user_id (int): The ID of the user making the request.
+#
+#     Returns:
+#         dict: A success message, or a 500 error if an error occurs.
+#     """
+#     logger.info(f"Fetch All Time Channel Info: {channel_code}")
+#
+#     info = channel_info(db, channel_code)
+#
+#     logger.info(f"Fetch All Time Channel Info RESULT: {info}")
+#
+#     return info
 
 
 @app.get("/info/active_couriers/{channel_code}")
@@ -191,6 +297,319 @@ async def fetch_active_couriers(
     logger.info(f"Fetch Active Couriers RESULT: {info}")
 
     return info
+
+
+@app.get("/info/channel_codes/{channel_code}")
+@timing_decorator
+async def fetch_channel_codes(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch Channel Codes for: {channel_code}")
+
+    info = get_channel_codes(db, channel_code)
+
+    logger.info(f"Fetch Channel Codes RESULT: {info}")
+
+    return info
+
+
+@app.get("/info/modules/{channel_code}")
+@timing_decorator
+async def fetch_modules(
+        channel_code: str,
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch Channel modules for: {channel_code}")
+
+    info = get_modules(db, channel_code)
+
+    logger.info(f"Fetch Channel modules RESULT: {info}")
+
+    return info
+
+
+@app.get("/info/warehouse",
+         # response_model=List[schemas.ChannelStatusResponse]
+         )
+@timing_decorator
+async def fetch_warehouse_info(
+        page: int,
+        db: Session = Depends(get_serializable_db)
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch General Warehouse Info")
+
+    info = warehouse_info(db, page)
+
+    logger.info(f"Fetch General Warehouse Info RESULT: {info}")
+
+    return info
+
+
+@app.get("/info/total_channels",
+         # response_model=List[schemas.ChannelStatusResponse]
+         )
+@timing_decorator
+async def fetch_total_channels(
+        db: Session = Depends(get_serializable_db)
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch Total # of Channels")
+
+    info = total_channels(db)
+
+    logger.info(f"Fetch Total # of Channels RESULT: {info}")
+
+    return info
+
+
+@app.get("/go/orders_by_courier",
+         # response_model=List[schemas.ChannelStatusResponse]
+         )
+@timing_decorator
+async def fetch_go_orders_by_courier(
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch GO Orders by Courier")
+
+    info = orders_by_courier(db)
+
+    logger.info(f"Fetch GO Orders by Courier RESULT: {info}")
+
+    return info
+
+
+@app.get("/go/pallets_by_courier",
+         # response_model=List[schemas.ChannelStatusResponse]
+         )
+@timing_decorator
+async def fetch_go_pallets_by_courier(
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch GO Pallets by Courier")
+
+    info = pallets_by_courier(db)
+
+    logger.info(f"Fetch GO Pallets by Courier RESULT: {info}")
+
+    return info
+
+
+@app.get("/go/orders_by_courier_group",
+         # response_model=List[schemas.ChannelStatusResponse]
+         )
+@timing_decorator
+async def fetch_go_orders_by_courier_group(
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch GO Orders by Courier Group")
+
+    info = orders_by_courier_group(db)
+
+    logger.info(f"Fetch GO Orders by Courier Group RESULT: {info}")
+
+    return info
+
+
+@app.get("/go/pallets_by_courier_group",
+         # response_model=List[schemas.ChannelStatusResponse]
+         )
+@timing_decorator
+async def fetch_go_pallets_by_courier_group(
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch GO Pallets by Courier Group")
+
+    info = pallets_by_courier_group(db)
+
+    logger.info(f"Fetch GO Pallets by Courier Group RESULT: {info}")
+
+    return info
+
+
+@app.get("/go/pallets_loaded_by_courier_group",
+         # response_model=List[schemas.ChannelStatusResponse]
+         )
+@timing_decorator
+async def fetch_go_pallets_loaded_by_courier_group(
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch GO Pallets Loaded by Courier Group")
+
+    info = pallets_loaded_by_courier_group(db)
+
+    logger.info(f"Fetch GO Pallets Loaded by Courier Group RESULT: {info}")
+
+    return info
+
+
+@app.get("/go/trucks_by_courier_group",
+         # response_model=List[schemas.ChannelStatusResponse]
+         )
+@timing_decorator
+async def fetch_go_trucks_by_courier_group(
+        db: Session = Depends(get_serializable_db),
+):
+    """
+    Endpoint to refresh the configurations for all channels.
+
+    This endpoint refreshes the configurations for all channels.
+    If an error occurs while refreshing the configurations, a 500 error is returned.
+
+    Args:
+        user_id (int): The ID of the user making the request.
+
+    Returns:
+        dict: A success message, or a 500 error if an error occurs.
+    """
+    logger.info(f"Fetch GO Trucks by Courier Group")
+
+    info = trucks_by_courier_group(db)
+
+    logger.info(f"Fetch GO Trucks by Courier Group RESULT: {info}")
+
+    return info
+
+
+########################################
+########## My Old Routes ##########
+########################################
+#
+#
+# @app.get("/info/today/{channel_code}",
+#          response_model=schemas.ChannelStatusResponse
+#          )
+# @timing_decorator
+# async def fetch_todays_channel_info(
+#         channel_code: str,
+#         db: Session = Depends(get_serializable_db),
+# ):
+#     """
+#     Endpoint to refresh the configurations for all channels.
+#
+#     This endpoint refreshes the configurations for all channels.
+#     If an error occurs while refreshing the configurations, a 500 error is returned.
+#
+#     Args:
+#         user_id (int): The ID of the user making the request.
+#
+#     Returns:
+#         dict: A success message, or a 500 error if an error occurs.
+#     """
+#     logger.info(f"Fetch Today's Channel Info: {channel_code}")
+#
+#     info = todays_channel_info(db, channel_code)
+#
+#     logger.info(f"Fetch Today's Channel Info RESULT: {info}")
+#
+#     return info
 
 
 

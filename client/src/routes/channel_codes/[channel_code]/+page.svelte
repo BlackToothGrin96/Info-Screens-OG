@@ -18,8 +18,8 @@
 </script>
 
 <svelte:head>
-	<title>Warehouse Overview</title>
-	<meta name="description" content="Warehouse Overview" />
+	<title>Channel Overview</title>
+	<meta name="description" content="Channel Overview" />
 </svelte:head>
 
 <div class="main">
@@ -29,7 +29,7 @@
 
 	<div class="cell2">
 			<div class="title-box">
-				<p class="channel-name">Warehouse Overview</p>
+				<p class="channel-name">{data.channel_name}</p>
 				<!--{#each data.info.statuses as info, index}-->
 				<!--	<h2 class="status-item">{info.status} - {info.count}</h2>-->
 				<!--{/each}-->
@@ -45,42 +45,50 @@
 <!--	</div>-->
 
 	<div class="cell4 rb-info-box columns is-multiline">
-<!--		<div class="cell-spacer">-->
-			{#each data.info.statuses.slice(0, 4) as info, index}
-				<div class="status-spacer column is-full">
-<!--					<div class="triangle-left"></div>-->
-					<div class="status-box columns">
-						<div class="column is-two-thirds status-item">
-							{info.status}
-						</div>
-						<div class="column is-one-third status-item">
-							{info.count}
-						</div>
-					</div>
-<!--					<div class="triangle-right"></div>-->
+		<div class="overview-spacer">
+			<div class="overview-box columns is-multiline">
+				<div class="column is-full status-item">
+					Channel Codes
 				</div>
-			{/each}
-<!--		</div>-->
+				{#if data.channel_codes.length > 7}
+					{#each data.channel_codes as code, index}
+						{#if index % 2 === 0}
+							<hr class="line-divider">
+						{/if}
+<!--						<hr class="line-divider">-->
+						<div class="column is-half overview-item-small">
+							{code}
+						</div>
+					{/each}
+				{:else}
+					{#each data.channel_codes as code, index}
+						<hr class="line-divider">
+						<div class="column is-full overview-item">
+							{code}
+						</div>
+					{/each}
+				{/if}
+			</div>
+		</div>
 	</div>
 
 	<div class="cell5 rb-info-box columns is-multiline">
-<!--		<div class="cell-spacer">-->
-			{#each data.info.statuses.slice(4) as info, index}
-				<div class="status-spacer column is-full">
-<!--					<div class="triangle-left"></div>-->
-					<div class="status-box columns">
-						<div class="column is-two-thirds status-item">
-							{info.status}
-						</div>
-						<div class="column is-one-third status-item">
-							{info.count}
-						</div>
-					</div>
-<!--					<div class="triangle-right"></div>-->
+		<div class="overview-spacer">
+			<div class="overview-box columns is-multiline">
+				<div class="column is-full status-item">
+					Picking Modules
 				</div>
-			{/each}
+				{#each data.modules as module, index}
+					{#if module.type === "PICKING"}
+						<hr class="line-divider">
+						<div class="column is-full overview-item">
+							{module.name}
+						</div>
+					{/if}
+				{/each}
+			</div>
 		</div>
-<!--	</div>-->
+	</div>
 </div>
 
 
@@ -106,19 +114,15 @@
 		grid-area: 1 / 1 / 2 / 3;
 		height: 100%;
 		margin: 0;
-		padding: 0;
+		padding: 3rem 1rem 1rem 2rem;
 	}
 	.cell5 {
 		grid-area: 1 / 3 / 2 / 5;
 		height: 100%;
 		margin: 0;
-		padding: 0;
+		padding: 3rem 2rem 1rem 1rem;
 	}
 
-	/*.side-box {*/
-	/*	align-items: center;*/
-	/*	justify-content: center;*/
-	/*}*/
 	.title-box {
 		background: var(--rb-byzantium);
 		align-items: center;
@@ -140,47 +144,13 @@
 		align-items: center;
 		justify-content: center;
 	}
-	/*.channel-box {*/
-	/*	height: 20vh;*/
-	/*}*/
 	.channel-name {
 		color: white;
 		font-weight: bold;
-		font-size: 12rem;
+		font-size: 10rem;
 		text-align: center;
 		padding: 0;
 		margin: 0;
-	}
-	.status-spacer {
-		align-items: center;
-		justify-content: center;
-		display: flex;
-		background: black;
-		width: 100%;
-		height: 25%;
-		padding: 0.75rem 1rem;
-		margin: 0;
-	}
-	.status-box {
-		background: white;
-		align-items: center;
-		justify-content: center;
-		/*padding-left: 10px;*/
-		/*padding-right: 10px;*/
-		margin: 0;
-		padding: 0;
-		width: 100%;
-		height: 100%;
-        /*height: 19%;*/
-		/*border-radius: 25px;*/
-		/*width: 200px;*/
-		aspect-ratio: 1.732 / 1; /* Correct hexagon ratio */
-		clip-path: polygon(
-			15% 0%, 85% 0%, /* Top points */
-			100% 50%, /* Right point */
-			85% 100%, 15% 100%, /* Bottom points */
-			0% 50% /* Left point */
-		);
 	}
 	.status-item {
 		color: black;
@@ -191,28 +161,60 @@
 		/*left: 0;*/
 		text-align: center;
 	}
-	/*.triangle-left {*/
-	/*	width: 0;*/
-	/*	height: 0;*/
-	/*	border-top: 25px solid transparent;*/
-	/*	border-right: 50px solid white;*/
-	/*	border-bottom: 25px solid transparent;*/
-	/*	!*background: white;*!*/
-	/*}*/
-	/*.triangle-right {*/
-	/*	width: 0;*/
-	/*	height: 0;*/
-	/*	border-top: 25px solid transparent;*/
-	/*	border-left: 50px solid white;*/
-	/*	border-bottom: 25px solid transparent;*/
-	/*	!*background: white;*!*/
-	/*}*/
-	/*.status-item-right {*/
-	/*	color: black;*/
-	/*	font-weight: bold;*/
-	/*	font-size: 10rem;*/
-	/*	margin: 0;*/
-	/*	right: 0;*/
-	/*	!*text-align: center;*!*/
-	/*}*/
+
+	.overview-spacer {
+		align-items: center;
+		justify-content: center;
+		display: flex;
+		background: black;
+		width: 100%;
+		height: 100%;
+		/*padding: 5px;*/
+		margin: 0;
+	}
+	.overview-box {
+		background: white;
+		align-items: center;
+		justify-content: center;
+		align-content: start;
+		/*padding-left: 10px;*/
+		/*padding-right: 10px;*/
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+        /*height: 19%;*/
+		border-radius: 25px;
+		/*width: 200px;*/
+		/*aspect-ratio: 1.732 / 1; !* Correct hexagon ratio *!*/
+		/*clip-path: polygon(*/
+		/*	15% 0%, 85% 0%, !* Top points *!*/
+		/*	100% 50%, !* Right point *!*/
+		/*	85% 100%, 15% 100%, !* Bottom points *!*/
+		/*	0% 50% !* Left point *!*/
+		/*);*/
+	}
+	.overview-item {
+		color: black;
+		font-weight: bold;
+		font-size: 6rem;
+		margin: 0;
+		padding: 0;
+		/*left: 0;*/
+		text-align: center;
+	}
+	.overview-item-small {
+		color: black;
+		font-weight: bold;
+		font-size: 4.5rem;
+		margin: 0;
+		padding: 0;
+		/*left: 0;*/
+		text-align: center;
+	}
+	hr.line-divider {
+	  border-top: 8px solid #bbb;
+	  border-radius: 5px;
+	  width: 85%;
+	}
 </style>

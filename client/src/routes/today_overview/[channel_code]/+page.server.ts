@@ -13,10 +13,20 @@ export const csr = dev;
 export const prerender = true;
 
 export const load: PageServerLoad = async ({ params }) => {
-    const channelInfo = await fetch(
-        'http://192.168.1.30:8000/info/today/' + params.channel_code);
-
-    const res = await channelInfo.json();
+    const channel_name = await fetch(
+        'http://192.168.1.30:8000/info/name/' + params.channel_code);
+    const open = await fetch(
+        'http://192.168.1.30:8000/info/open/' + params.channel_code);
+    const new_today = await fetch(
+        'http://192.168.1.30:8000/info/new_today/' + params.channel_code);
+    const other_numbers = await fetch(
+        'http://192.168.1.30:8000/info/others/' + params.channel_code);
+    var oldest = await fetch(
+        'http://192.168.1.30:8000/info/oldest/' + params.channel_code);
+    const cancelled = await fetch(
+        'http://192.168.1.30:8000/info/cancelled/' + params.channel_code);
+    const priority = await fetch(
+        'http://192.168.1.30:8000/info/priority/' + params.channel_code);
 
     // let total = 0;
     //
@@ -25,9 +35,14 @@ export const load: PageServerLoad = async ({ params }) => {
     // });
 
     const result = {
-        "info": res,
-        // "total": total,
         "channel_code": params.channel_code,
+        "channel_name": await channel_name.json(),
+        "open": await open.json(),
+        "new": await new_today.json(),
+        "other": await other_numbers.json(),
+        "oldest": await oldest.json(),
+        "cancelled": await cancelled.json(),
+        "priority": await priority.json(),
     }
 
     console.log("result: ", result);
