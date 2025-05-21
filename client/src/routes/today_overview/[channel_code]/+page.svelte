@@ -18,11 +18,17 @@
 	<div class="cell2">
 			<div class="title-box">
 				{#if data.channel_name.length > 20}
-					<p class="channel-name" style="font-size: 8rem">{data.channel_name}</p>
+					<p class="channel-name" style="font-size: 7rem">
+						{data.channel_name}
+					</p>
 				{:else if data.channel_name.length > 16}
-					<p class="channel-name" style="font-size: 10rem">{data.channel_name}</p>
+					<p class="channel-name" style="font-size: 8rem">
+						{data.channel_name}
+					</p>
 				{:else}
-					<p class="channel-name" style="font-size: 12rem">{data.channel_name}</p>
+					<p class="channel-name" style="font-size: 9rem">
+						{data.channel_name}
+					</p>
 				{/if}
 			</div>
 	</div>
@@ -81,7 +87,7 @@
 	</div>
 
 	<div class="cell5 rb-info-box columns is-multiline">
-		<!--{#each data.info.statuses.slice(4) as info, index}-->
+<!--		&lt;!&ndash;{#each data.info.statuses.slice(4) as info, index}&ndash;&gt;-->
 			<div class="status-spacer column is-full">
 				<div class="status-box columns">
 					<div class="column is-two-thirds status-item">
@@ -122,7 +128,7 @@
 					</div>
 				</div>
 			</div>
-		<!--{/each}-->
+<!--		&lt;!&ndash;{/each}&ndash;&gt;-->
 	</div>
 </div>
 
@@ -147,13 +153,15 @@
 	.cell3 { grid-area: 2 / 4 / 3 / 5; }
 	.cell4 {
 		grid-area: 1 / 1 / 2 / 3;
-		height: 100%;
+		height: 85%;
+		width: 50%;
 		margin: 0;
 		padding: 1rem 0 0 1rem;
 	}
 	.cell5 {
 		grid-area: 1 / 3 / 2 / 5;
-		height: 100%;
+		height: 85%;
+		width: 50%;
 		margin: 0;
 		padding: 1rem 1rem 0 0;
 	}
@@ -196,7 +204,7 @@
 		display: flex;
 		background: black;
 		width: 100%;
-		height: 25%;
+		height: 24.5%;
 		padding: 1rem;
 		margin: 0;
 	}

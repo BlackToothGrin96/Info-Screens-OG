@@ -22,7 +22,7 @@
 		<div class="cell-spacer">
 			<p class="channel-name">Having issues with the app?</p>
 			<p class="channel-name">Please check you have the latest version:</p>
-			<p class="channel-name">V1.3.1 - Duplicate Collections</p>
+			<p class="channel-name">V1.4.9 - L'Oreal Flow</p>
 			<div class="logo">
             	<img src={instruction} alt="RexBrown Innovations" />
 			</div>

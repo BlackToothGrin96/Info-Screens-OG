@@ -31,7 +31,7 @@
 	<div class="cell1 rb-info-box">
 		<div class="cell-spacer">
 <!--			<div class="status-box">-->
-				<p class="channel-name">Latest App Version: V1.3.1 - Duplicate Collections</p>
+				<p class="channel-name">Latest App Version: V1.4.9 - L'Oreal Flow</p>
 <!--			<h1 class="channel-name">{data.info.channel_name}</h1>-->
 <!--				<h2 class="status-item">{data.total} Total Orders</h2>-->
 

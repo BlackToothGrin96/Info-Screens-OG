@@ -3,11 +3,10 @@
 # In fact, some of the configs in this file might throw errors, but they won't throw errors in the Dockerfile
 # (e.g. the `dev-server` config for `command: CODE_ENVIRONMENT="local" uvicorn main:app --reload --host=0.0.0.0`).
 
-#version: "3.7"
-
 services:
   dev-server:
     # container_name: dev-server
+    restart: always
     build:
       context: ./
       dockerfile: ./server/Dockerfile.server.dev
@@ -28,6 +27,7 @@ services:
 
   dev-client:
     # container_name: dev-client
+    restart: always
     build:
       context: ./
       dockerfile: ./client/Dockerfile.client.dev

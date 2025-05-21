@@ -69,3 +69,7 @@ GROUP BY
 carrier.name 
 ORDER BY 
 COUNT(DISTINCT CASE WHEN basket_order.status = 'OPEN' THEN basket_order.basket_id ELSE NULL END) DESC
+
+
+
+docker compose -f docker-compose.dev.yml up --build -d

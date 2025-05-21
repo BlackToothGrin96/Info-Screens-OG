@@ -61,19 +61,19 @@
 					{#if info.open_count === 0}
 						<div class="status-box columns done">
 							{#if info.channel_code.length >= 25}
-								<div class="column is-three-fifths status-title-done" style="font-size: 4rem">
-									{info.channel_code}
-								</div>
-							{:else if info.channel_code.length >= 22}
-								<div class="column is-three-fifths status-title-done" style="font-size: 4.5rem">
-									{info.channel_code}
-								</div>
-							{:else if info.channel_code.length >= 18}
 								<div class="column is-three-fifths status-title-done" style="font-size: 5rem">
 									{info.channel_code}
 								</div>
-							{:else if info.channel_code.length >= 15}
+							{:else if info.channel_code.length >= 22}
 								<div class="column is-three-fifths status-title-done" style="font-size: 5.5rem">
+									{info.channel_code}
+								</div>
+							{:else if info.channel_code.length >= 18}
+								<div class="column is-three-fifths status-title-done" style="font-size: 6rem">
+									{info.channel_code}
+								</div>
+							{:else if info.channel_code.length >= 15}
+								<div class="column is-three-fifths status-title-done" style="font-size: 6.5rem">
 									{info.channel_code}
 								</div>
 							{:else}
@@ -88,19 +88,19 @@
 					{:else}
 						<div class="status-box columns">
 							{#if info.channel_code.length >= 25}
-								<div class="column is-three-fifths status-title" style="font-size: 4rem">
-									{info.channel_code}
-								</div>
-							{:else if info.channel_code.length >= 22}
-								<div class="column is-three-fifths status-title" style="font-size: 4.5rem">
-									{info.channel_code}
-								</div>
-							{:else if info.channel_code.length >= 18}
 								<div class="column is-three-fifths status-title" style="font-size: 5rem">
 									{info.channel_code}
 								</div>
-							{:else if info.channel_code.length >= 15}
+							{:else if info.channel_code.length >= 22}
 								<div class="column is-three-fifths status-title" style="font-size: 5.5rem">
+									{info.channel_code}
+								</div>
+							{:else if info.channel_code.length >= 18}
+								<div class="column is-three-fifths status-title" style="font-size: 6rem">
+									{info.channel_code}
+								</div>
+							{:else if info.channel_code.length >= 15}
+								<div class="column is-three-fifths status-title" style="font-size: 6.5rem">
 									{info.channel_code}
 								</div>
 							{:else}
@@ -149,19 +149,19 @@
 					{#if info.open_count === 0}
 						<div class="status-box columns done">
 							{#if info.channel_code.length >= 25}
-								<div class="column is-three-fifths status-title-done" style="font-size: 4rem">
-									{info.channel_code}
-								</div>
-							{:else if info.channel_code.length >= 22}
-								<div class="column is-three-fifths status-title-done" style="font-size: 4.5rem">
-									{info.channel_code}
-								</div>
-							{:else if info.channel_code.length >= 18}
 								<div class="column is-three-fifths status-title-done" style="font-size: 5rem">
 									{info.channel_code}
 								</div>
-							{:else if info.channel_code.length >= 15}
+							{:else if info.channel_code.length >= 22}
 								<div class="column is-three-fifths status-title-done" style="font-size: 5.5rem">
+									{info.channel_code}
+								</div>
+							{:else if info.channel_code.length >= 18}
+								<div class="column is-three-fifths status-title-done" style="font-size: 6rem">
+									{info.channel_code}
+								</div>
+							{:else if info.channel_code.length >= 15}
+								<div class="column is-three-fifths status-title-done" style="font-size: 6.5rem">
 									{info.channel_code}
 								</div>
 							{:else}
@@ -176,19 +176,19 @@
 					{:else}
 						<div class="status-box columns">
 							{#if info.channel_code.length >= 25}
-								<div class="column is-three-fifths status-title" style="font-size: 4rem">
-									{info.channel_code}
-								</div>
-							{:else if info.channel_code.length >= 22}
-								<div class="column is-three-fifths status-title" style="font-size: 4.5rem">
-									{info.channel_code}
-								</div>
-							{:else if info.channel_code.length >= 18}
 								<div class="column is-three-fifths status-title" style="font-size: 5rem">
 									{info.channel_code}
 								</div>
-							{:else if info.channel_code.length >= 15}
+							{:else if info.channel_code.length >= 22}
 								<div class="column is-three-fifths status-title" style="font-size: 5.5rem">
+									{info.channel_code}
+								</div>
+							{:else if info.channel_code.length >= 18}
+								<div class="column is-three-fifths status-title" style="font-size: 6rem">
+									{info.channel_code}
+								</div>
+							{:else if info.channel_code.length >= 15}
+								<div class="column is-three-fifths status-title" style="font-size: 6.5rem">
 									{info.channel_code}
 								</div>
 							{:else}
